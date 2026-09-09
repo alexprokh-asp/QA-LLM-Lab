@@ -1,0 +1,18 @@
+description: Telegram Bot Red Team
+
+targets:
+  - id: telegram-bot
+    config:
+      url: http://localhost:5000/prompt
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        message: '{{prompt}}'
+      responseParser: json.output
+
+redteam:
+  numTests: 1
+  plugins:
+    - id: hijacking
+      numTests: 1

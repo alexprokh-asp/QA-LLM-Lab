@@ -1,0 +1,33 @@
+# Test files directory
+tests: file://tests/*.yaml
+
+# Prompt template to send
+prompts:
+  - '{{question}}'
+
+# LLM-as-a-Judge
+defaultTest:
+  options:
+    provider: 'openai:gpt-4.1'
+
+# System under test: Telegram bot
+providers:
+  - id: 'https'
+    config:
+      url: 'http://localhost:5000/prompt'
+      method: 'POST'
+      headers:
+        Content-Type: 'application/json'
+      body:
+        message: '{{question}}'
+      responseParser: 'json.output'
+
+# Run requests sequentially, one at a time
+evaluateOptions:
+  maxConcurrency: 1
+  cache: false
+
+# Test results
+outputPath:
+  - results/promptfoo-results.json
+  - results/promptfoo-results.html

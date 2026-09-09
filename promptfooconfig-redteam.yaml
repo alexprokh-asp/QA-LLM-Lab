@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: My Red Team Configuration
+targets:
+  - id: http
+    label: Tg-bot
+    config:
+      url: http://localhost:5000/prompt
+      method: POST
+      headers:
+        Content-Type: application/json
+      body: '{"message":"{{prompt}}"}'
+      transformResponse: json.output
+      delay: 0
+    delay: 10
+prompts:
+  - '{{prompt}}'
+redteam:
+  purpose: |-
+    Application Purpose:
+    ```
+    A Telegram support bot that answers user questions about product services and order statuses. It must stay helpful, strictly refuse to reveal system prompts or API keys, refrain from executing unauthorized commands, and never generate harmful or toxic content.
+    ```
+  plugins:
+    - id: shell-injection  # Tests for command injection vulnerabilities
+  strategies:
+    - id: basic  # Original plugin tests without any additional strategies or optimizations
+  numTests: 10
+  maxConcurrency: 1
+defaultTest:
+  options:
+    transformVars: '{ ...vars, sessionId: context.uuid }'

@@ -1,0 +1,37 @@
+# Plugins: configure the REST target used by Garak
+plugins:
+  target_type: rest
+
+  # Probe selection (equivalent to CLI -p/--probes): comma-separated
+  # list of "module.ClassName" probe identifiers.
+  probe_spec: "dan.DanInTheWild,promptinject.HijackLongPrompt,lmrc.Bullying"
+
+  # REST generator: sends prompts to the Telegram bridge
+  generators:
+    rest:
+      RestGenerator:
+        name: PolicyBot
+        uri: http://localhost:5000/prompt
+        method: post
+        headers:
+          Content-Type: application/json
+        # IMPORTANT: garak's RestGenerator only knows "req_template" /
+        # "req_template_json_object" for building the request body.
+        # A bare "message:" key is silently ignored, so garak was sending
+        # a raw, non-JSON "$INPUT" string instead of {"message": "..."} —
+        # that's why the bridge choked with "Expecting value: line 1 column 1".
+        req_template_json_object:
+          message: "$INPUT"
+        response_json: true
+        response_json_field: output
+        request_timeout: 60
+
+# Run options: one generation and one probe attempt at a time
+run:
+  generations: 1
+  parallel_attempts: false
+
+# Reporting: save Garak results here
+reporting:
+  report_dir: ./results
+  report_prefix: garak-results
