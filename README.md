@@ -109,7 +109,7 @@ You'll also need:
 ### 1. Clone the repo
 
 ```powershell
-git clone <your-repo-url>.git
+git clone https://github.com/alexprokh-asp/QA-LLM-Lab.git
 cd QA-LLM-Lab
 ```
 
